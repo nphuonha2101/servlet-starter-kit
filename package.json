@@ -1,0 +1,17 @@
+{
+  "name": "demo-frontend",
+  "version": "1.0.0",
+  "description": "Frontend development setup for Java JSP project",
+  "type": "module",
+  "scripts": {
+    "dev": "tailwindcss -i ./src/main/webapp/static/css/input.css -o ./src/main/webapp/static/css/main.css --watch",
+    "build": "tailwindcss -i ./src/main/webapp/static/css/input.css -o ./src/main/webapp/static/css/main.css"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "concurrently": "^8.2.2",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.4.0",
+    "vite": "^5.0.0"
+  }
+}
