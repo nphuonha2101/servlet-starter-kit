@@ -1,10 +1,10 @@
 package com.example.demo.http.controllers.web.user;
 
 import com.example.demo.models.User;
-import com.example.demo.services.implementations.UserService;
 import com.example.demo.http.controllers.web.BaseWebController;
 import com.example.demo.http.pages.Page;
 
+import com.example.demo.services.interfaces.user.IUserService;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,7 +18,7 @@ import java.util.Optional;
 public class UserController extends BaseWebController {
 
     @Inject
-    private UserService userService;
+    private IUserService userService;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

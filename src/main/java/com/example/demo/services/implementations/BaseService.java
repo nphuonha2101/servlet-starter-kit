@@ -10,10 +10,8 @@ import java.util.Optional;
 public abstract class BaseService<T extends BaseModel, ID> implements IBaseService<T, ID> {
     
     protected IBaseRepository<T, ID> repository;
-    
-    // No-arg constructor for CDI proxy support
+
     protected BaseService() {
-        // Empty constructor for CDI proxying
     }
     
     public BaseService(IBaseRepository<T, ID> repository) {

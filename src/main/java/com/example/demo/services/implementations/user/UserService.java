@@ -1,87 +1,38 @@
-package com.example.demo.services.implementations;
+package com.example.demo.services.implementations.user;
 
 import com.example.demo.models.User;
-import com.example.demo.repository.implementations.UserRepository;
 
+import com.example.demo.repository.interfaces.user.IUserRepository;
+import com.example.demo.services.implementations.BaseService;
+import com.example.demo.services.interfaces.user.IUserService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import java.util.List;
 import java.util.Optional;
 
 @ApplicationScoped
-public class UserService extends BaseService<User, Long> {
+public class UserService extends BaseService<User, Long> implements IUserService {
 
-    // No-arg constructor for CDI proxy support
     protected UserService() {
         super();
     }
 
-    // Constructor with @Inject for CDI dependency injection
     @Inject
-    public UserService(UserRepository userRepository) {
+    public UserService(IUserRepository userRepository) {
         super();
         this.repository = userRepository;
     }
     
-    /**
-     * Find user by email
-     */
+    @Override
     public Optional<User> findByEmail(String email) {
-        try {
-            if (email == null || email.trim().isEmpty()) {
-                throw new IllegalArgumentException("Email cannot be null or empty");
-            }
-            
-            Optional<List<User>> allUsers = findAll();
-            return allUsers.flatMap(users -> 
-                users.stream()
-                    .filter(user -> email.equals(user.getEmail()))
-                    .findFirst()
-            );
-        } catch (Exception e) {
-            throw new RuntimeException("Error finding user by email: " + email, e);
-        }
+        return ((IUserRepository) this.repository).findByEmail(email);
     }
     
-    /**
-     * Find user by username
-     */
+    @Override
     public Optional<User> findByUsername(String username) {
-        try {
-            if (username == null || username.trim().isEmpty()) {
-                throw new IllegalArgumentException("Username cannot be null or empty");
-            }
-            
-            Optional<List<User>> allUsers = findAll();
-            return allUsers.flatMap(users -> 
-                users.stream()
-                    .filter(user -> username.equals(user.getUsername()))
-                    .findFirst()
-            );
-        } catch (Exception e) {
-            throw new RuntimeException("Error finding user by username: " + username, e);
-        }
+        return ((IUserRepository) this.repository).findByUsername(username);
     }
-    
-    /**
-     * Find active users
-     */
-    public Optional<List<User>> findActiveUsers() {
-        try {
-            Optional<List<User>> allUsers = findAll();
-            return allUsers.map(users -> 
-                users.stream()
-                    .filter(user -> User.Status.ACTIVE.getValue().equals(user.getStatus()))
-                    .toList()
-            );
-        } catch (Exception e) {
-            throw new RuntimeException("Error finding active users", e);
-        }
-    }
-    
-    /**
-     * Activate user
-     */
+
+    @Override
     public Optional<Boolean> activateUser(Long userId) {
         try {
             Optional<User> userOpt = findById(userId);
@@ -96,9 +47,7 @@ public class UserService extends BaseService<User, Long> {
         }
     }
     
-    /**
-     * Deactivate user
-     */
+    @Override
     public Optional<Boolean> deactivateUser(Long userId) {
         try {
             Optional<User> userOpt = findById(userId);
@@ -113,9 +62,7 @@ public class UserService extends BaseService<User, Long> {
         }
     }
     
-    /**
-     * Create user with validation
-     */
+    @Override
     public Optional<User> createUser(User user) {
         try {
             validateUserForCreation(user);
@@ -125,9 +72,7 @@ public class UserService extends BaseService<User, Long> {
         }
     }
     
-    /**
-     * Update user with validation
-     */
+    @Override
     public Optional<Boolean> updateUser(User user) {
         try {
             validateUserForUpdate(user);
@@ -137,9 +82,7 @@ public class UserService extends BaseService<User, Long> {
         }
     }
     
-    /**
-     * Delete user with validation
-     */
+    @Override
     public Optional<Boolean> deleteUser(Long userId) {
         try {
             validateUserForDeletion(userId);

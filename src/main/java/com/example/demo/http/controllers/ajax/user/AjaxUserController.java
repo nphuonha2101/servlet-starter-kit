@@ -2,7 +2,7 @@ package com.example.demo.http.controllers.ajax.user;
 
 import com.example.demo.http.controllers.ajax.BaseAjaxController;
 import com.example.demo.models.User;
-import com.example.demo.services.implementations.UserService;
+import com.example.demo.services.implementations.user.UserService;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
