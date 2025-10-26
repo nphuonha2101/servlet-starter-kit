@@ -8,7 +8,7 @@
 
 <head>
     <title>${title}</title>
-
+    <meta charset="UTF-8">
     <%-- Tailwind CSS (Built from npm) --%>
     <link rel="stylesheet" href="/static/css/main.css">
     

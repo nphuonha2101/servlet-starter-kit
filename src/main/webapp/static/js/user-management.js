@@ -1,4 +1,4 @@
-$(function () {
+﻿$(function () {
     function collectUserFormData() {
         const formData = new FormData();
         formData.append('username', $('#username').val());
