@@ -149,40 +149,6 @@ public class UserService extends BaseService<User, Long> {
         }
     }
     
-    /**
-     * Validate user for creation
-     */
-    private void validateUserForCreation(User user) {
-        if (user == null) {
-            throw new IllegalArgumentException("User cannot be null");
-        }
-        
-        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
-            throw new IllegalArgumentException("Username is required");
-        }
-        
-        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
-            throw new IllegalArgumentException("Email is required");
-        }
-        
-        if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
-            throw new IllegalArgumentException("Password is required");
-        }
-        
-        // Business validation
-        if (isEmailAlreadyExists(user.getEmail())) {
-            throw new IllegalArgumentException("Email already exists");
-        }
-        
-        if (isUsernameAlreadyExists(user.getUsername())) {
-            throw new IllegalArgumentException("Username already exists");
-        }
-        
-        // Set default status if not provided
-        if (user.getStatus() == null || user.getStatus().trim().isEmpty()) {
-            user.setStatus("ACTIVE");
-        }
-    }
     
     /**
      * Validate user for update
@@ -204,7 +170,12 @@ public class UserService extends BaseService<User, Long> {
             throw new IllegalArgumentException("Email is required");
         }
         
-        // Business validation
+        // Validate email format
+        if (!isValidEmail(user.getEmail())) {
+            throw new IllegalArgumentException("Invalid email format");
+        }
+        
+        // Business validation - check for duplicates
         if (isEmailAlreadyExists(user.getEmail(), user.getId())) {
             throw new IllegalArgumentException("Email already exists");
         }
@@ -212,6 +183,86 @@ public class UserService extends BaseService<User, Long> {
         if (isUsernameAlreadyExists(user.getUsername(), user.getId())) {
             throw new IllegalArgumentException("Username already exists");
         }
+        
+        // Password validation - if password is set, validate it
+        if (user.getPassword() != null && !user.getPassword().trim().isEmpty()) {
+            if (user.getPassword().length() < 6) {
+                throw new IllegalArgumentException("Password must be at least 6 characters long");
+            }
+            if (user.getPassword().length() > 100) {
+                throw new IllegalArgumentException("Password cannot exceed 100 characters");
+            }
+        }
+    }
+    
+    /**
+     * Validate user for creation
+     */
+    private void validateUserForCreation(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+        
+        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+            throw new IllegalArgumentException("Username is required");
+        }
+        
+        if (user.getUsername().length() < 3) {
+            throw new IllegalArgumentException("Username must be at least 3 characters long");
+        }
+        
+        if (user.getUsername().length() > 50) {
+            throw new IllegalArgumentException("Username cannot exceed 50 characters");
+        }
+        
+        if (!user.getUsername().matches("^[a-zA-Z0-9_]+$")) {
+            throw new IllegalArgumentException("Username can only contain letters, numbers, and underscores");
+        }
+        
+        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+            throw new IllegalArgumentException("Email is required");
+        }
+        
+        if (!isValidEmail(user.getEmail())) {
+            throw new IllegalArgumentException("Invalid email format");
+        }
+        
+        if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
+            throw new IllegalArgumentException("Password is required");
+        }
+        
+        if (user.getPassword().length() < 6) {
+            throw new IllegalArgumentException("Password must be at least 6 characters long");
+        }
+        
+        if (user.getPassword().length() > 100) {
+            throw new IllegalArgumentException("Password cannot exceed 100 characters");
+        }
+        
+        // Business validation
+        if (isEmailAlreadyExists(user.getEmail())) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+        
+        if (isUsernameAlreadyExists(user.getUsername())) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+        
+        // Set default status if not provided
+        if (user.getStatus() == null || user.getStatus().trim().isEmpty()) {
+            user.setStatus("ACTIVE");
+        }
+    }
+    
+    /**
+     * Simple email validation
+     */
+    private boolean isValidEmail(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            return false;
+        }
+        // Basic email validation
+        return email.matches("^[A-Za-z0-9+_.-]+@(.+)$");
     }
     
     /**

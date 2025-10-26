@@ -84,10 +84,12 @@ public class UserController extends BaseWebController {
             Optional<List<User>> usersOpt = userService.findAll();
             List<User> users = usersOpt.orElse(List.of());
 
+            System.out.println("DEBUG - Users: " + users);
+
             request.setAttribute("users", users);
             request.setAttribute("pageTitle", "User Management");
-
-            Page page = new Page().setTitle("User List").setPageName("users/list").setLayout("app");
+            String[] scripts = new String[]{"user-management.js"};
+            Page page = new Page().setTitle("User List").setPageName("users/list").setLayout("app").setScripts(scripts);
             renderPage(request, response, page);
         } catch (Exception e) {
             handleError(request, response, "Error loading users: " + e.getMessage());
@@ -114,8 +116,9 @@ public class UserController extends BaseWebController {
             if (userOpt.isPresent()) {
                 request.setAttribute("user", userOpt.get());
                 request.setAttribute("pageTitle", "User Details");
-                
-                Page page = new Page().setTitle("User Details").setPageName("users/view").setLayout("app");
+
+                String[] scripts = new String[]{"user-management.js"};
+                Page page = new Page().setTitle("User Details").setPageName("users/view").setLayout("app").setScripts(scripts);
                 renderPage(request, response, page);
             } else {
                 redirect(request, response, "/users");
@@ -129,7 +132,8 @@ public class UserController extends BaseWebController {
             throws ServletException, IOException {
 
         request.setAttribute("pageTitle", "Create User");
-        Page page = new Page().setTitle("Create User").setPageName("users/create").setLayout("app");
+        String[] scripts = new String[]{"user-management.js"};
+        Page page = new Page().setTitle("Create User").setPageName("users/create").setLayout("app").setScripts(scripts);
         renderPage(request, response, page);
     }
 
@@ -173,7 +177,8 @@ public class UserController extends BaseWebController {
             if (userOpt.isPresent()) {
                 request.setAttribute("user", userOpt.get());
                 request.setAttribute("pageTitle", "Edit User");
-                Page page = new Page().setTitle("Edit User").setPageName("users/edit").setLayout("app");
+                String[] scripts = new String[]{"user-management.js"};
+                Page page = new Page().setTitle("Edit User").setPageName("users/edit").setLayout("app").setScripts(scripts);
                 page.render(request, response);
             } else {
                 response.sendRedirect(request.getContextPath() + "/users");

@@ -42,6 +42,14 @@ public class CharacterEncodingFilter implements Filter {
         if (this.forceEncoding || httpResponse.getCharacterEncoding() == null) {
             httpResponse.setCharacterEncoding(this.encoding);
         }
+        
+        String requestURI = httpRequest.getRequestURI();
+        if (requestURI != null && (requestURI.endsWith(".js"))) {
+            String contentType = httpResponse.getContentType();
+            if (contentType == null || !contentType.contains("charset")) {
+                httpResponse.setContentType("application/javascript; charset=" + this.encoding);
+            }
+        }
 
         chain.doFilter(request, response);
     }

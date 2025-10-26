@@ -1,5 +1,7 @@
 package com.example.demo.repository.binds;
 
+import com.example.demo.core.utils.StringUtils;
+
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 
@@ -21,7 +23,7 @@ public class EntityBinder {
                 values.append(", ");
             }
             
-            sql.append(field.getName());
+            sql.append(StringUtils.camelToSnakeCase(field.getName()));
             values.append(":").append(field.getName());
             first = false;
         }
@@ -44,7 +46,7 @@ public class EntityBinder {
                 sql.append(", ");
             }
             
-            sql.append(field.getName()).append(" = :").append(field.getName());
+            sql.append(StringUtils.camelToSnakeCase(field.getName())).append(" = :").append(field.getName());
             first = false;
         }
         
@@ -57,12 +59,12 @@ public class EntityBinder {
      */
     public static void setTimestamps(Object entity, boolean isUpdate) {
         try {
-            Field updatedAtField = entity.getClass().getDeclaredField("updatedAt");
+            Field updatedAtField = getField(entity.getClass(), "updatedAt");
             updatedAtField.setAccessible(true);
             updatedAtField.set(entity, LocalDateTime.now());
             
             if (!isUpdate) {
-                Field createdAtField = entity.getClass().getDeclaredField("createdAt");
+                Field createdAtField = getField(entity.getClass(), "createdAt");
                 createdAtField.setAccessible(true);
                 createdAtField.set(entity, LocalDateTime.now());
             }
@@ -70,4 +72,20 @@ public class EntityBinder {
             throw new RuntimeException("Error setting timestamps", e);
         }
     }
+    
+    /**
+     * Helper method to get a field from the class or its parent classes
+     */
+    private static Field getField(Class<?> clazz, String fieldName) throws NoSuchFieldException {
+        Class<?> currentClass = clazz;
+        while (currentClass != null) {
+            try {
+                return currentClass.getDeclaredField(fieldName);
+            } catch (NoSuchFieldException e) {
+                currentClass = currentClass.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
+    }
+    
 }

@@ -1,4 +1,7 @@
-<jsp:include page="/views/layouts/partials/view-meta.jsp"/>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
 <div class="container mx-auto px-4 py-8">
     <div class="flex justify-between items-center mb-6">
@@ -29,7 +32,7 @@
         <form method="post" action="/users/create" class="px-6 py-4" data-validate="user" id="userForm">
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <!-- Username -->
-                <div>
+                <div class="form-field">
                     <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
                         Username <span class="text-red-500">*</span>
                     </label>
@@ -43,7 +46,7 @@
                 </div>
 
                 <!-- Email -->
-                <div>
+                <div class="form-field">
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
                         Email <span class="text-red-500">*</span>
                     </label>
@@ -57,7 +60,7 @@
                 </div>
 
                 <!-- Password -->
-                <div>
+                <div class="form-field">
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
                         Password <span class="text-red-500">*</span>
                     </label>
@@ -70,7 +73,7 @@
                 </div>
 
                 <!-- Status -->
-                <div>
+                <div class="form-field">
                     <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
                         Status
                     </label>

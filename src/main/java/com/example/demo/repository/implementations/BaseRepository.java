@@ -21,7 +21,7 @@ public abstract class BaseRepository<T extends BaseModel, ID> implements IBaseRe
     
     @SuppressWarnings("unchecked")
     public BaseRepository() {
-        // Don't extract entityClass here to avoid ClassCastException in proxy
+        
     }
     
     // Lazy initialization of entityClass
@@ -161,7 +161,7 @@ public abstract class BaseRepository<T extends BaseModel, ID> implements IBaseRe
         ensureEntityClassInitialized();
         EntityBinder.setTimestamps(entity, false);
         
-        Field[] fields = entityClass.getDeclaredFields();
+        Field[] fields = getFieldsFromHierarchy(entityClass);
         String sql = EntityBinder.generateInsertSQL(getTableName(), fields);
         
         Long generatedId = handle.createUpdate(sql)
@@ -181,7 +181,7 @@ public abstract class BaseRepository<T extends BaseModel, ID> implements IBaseRe
         ensureEntityClassInitialized();
         EntityBinder.setTimestamps(entity, true);
         
-        Field[] fields = entityClass.getDeclaredFields();
+        Field[] fields = getFieldsFromHierarchy(entityClass);
         String sql = EntityBinder.generateUpdateSQL(getTableName(), fields);
         
         int rowsAffected = handle.createUpdate(sql)
@@ -189,5 +189,22 @@ public abstract class BaseRepository<T extends BaseModel, ID> implements IBaseRe
                 .execute();
         
         return rowsAffected > 0 ? Optional.of(entity) : Optional.empty();
+    }
+    
+    /**
+     * Get all fields from the class and its parent classes
+     */
+    private Field[] getFieldsFromHierarchy(Class<?> clazz) {
+        java.util.List<Field> fields = new java.util.ArrayList<>();
+        Class<?> currentClass = clazz;
+        
+        while (currentClass != null && currentClass != Object.class) {
+            for (Field field : currentClass.getDeclaredFields()) {
+                fields.add(field);
+            }
+            currentClass = currentClass.getSuperclass();
+        }
+        
+        return fields.toArray(new Field[0]);
     }
 }

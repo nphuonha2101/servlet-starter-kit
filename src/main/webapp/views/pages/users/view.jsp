@@ -1,4 +1,7 @@
-<jsp:include page="/views/layouts/partials/view-meta.jsp"/>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
 <div class="container mx-auto px-4 py-8">
     <div class="flex justify-between items-center mb-6">
@@ -67,13 +70,13 @@
                 <div>
                     <dt class="text-sm font-medium text-gray-500">Created At</dt>
                     <dd class="mt-1 text-sm text-gray-900">
-                        <fmt:formatDate value="${user.createdAt}" pattern="MMM dd, yyyy 'at' HH:mm"/>
+                        <fmt:formatDate value="${user.createdAtAsDate}" pattern="MMM dd, yyyy 'at' HH:mm"/>
                     </dd>
                 </div>
                 <div>
                     <dt class="text-sm font-medium text-gray-500">Last Updated</dt>
                     <dd class="mt-1 text-sm text-gray-900">
-                        <fmt:formatDate value="${user.updatedAt}" pattern="MMM dd, yyyy 'at' HH:mm"/>
+                        <fmt:formatDate value="${user.updatedAtAsDate}" pattern="MMM dd, yyyy 'at' HH:mm"/>
                     </dd>
                 </div>
             </dl>

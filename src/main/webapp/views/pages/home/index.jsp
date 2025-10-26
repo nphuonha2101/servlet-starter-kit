@@ -1,6 +1,9 @@
-<jsp:include page="/views/layouts/partials/view-meta.jsp"/>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
-<div class="bg-yellow-500  min-h-screen">
+<div class="bg-green-100  min-h-screen">
     <div class="container mx-auto px-4 py-12">
         <!-- Hero Section -->
         <div class="text-center mb-12">

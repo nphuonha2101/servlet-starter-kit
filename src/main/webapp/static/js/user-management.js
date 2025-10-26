@@ -179,14 +179,36 @@ $(function () {
 
 (function (exports, global) {
     exports.validateUserForm = function () {
+        const isEditForm = $('#submit-btn-edit').length > 0;
+        
+        const passwordRules = isEditForm ? {
+            minlength: 6,
+            maxlength: 100
+        } : {
+            required: true,
+            minlength: 6,
+            maxlength: 100
+        };
+        
+        const passwordMessages = isEditForm ? {
+            minlength: "Mật khẩu phải có ít nhất 6 ký tự",
+            maxlength: "Mật khẩu không được vượt quá 100 ký tự"
+        } : {
+            required: "Mật khẩu không được để trống",
+            minlength: "Mật khẩu phải có ít nhất 6 ký tự",
+            maxlength: "Mật khẩu không được vượt quá 100 ký tự"
+        };
+        
         $("#userForm").validate({
             errorPlacement: function (error, element) {
-                $(element).parents('.form-group').find('span.input-invalid').remove();
-                $(element).parents('.form-group').append(error);
+                $(element).next('.text-red-600').remove();
+                error.addClass('text-red-600 text-sm mt-1 block');
+                error.insertAfter(element);
             },
             ignore: ':hidden:not(.validate)',
             errorElement: "span",
-            errorClass: "input-invalid",
+            errorClass: "input-error",
+            validClass: "input-valid",
             rules: {
                 username: {
                     required: true,
@@ -199,11 +221,7 @@ $(function () {
                     email: true,
                     maxlength: 100
                 },
-                password: {
-                    required: true,
-                    minlength: 6,
-                    maxlength: 100
-                },
+                password: passwordRules,
                 status: {
                     required: true
                 }
@@ -220,11 +238,7 @@ $(function () {
                     email: "Vui lòng nhập địa chỉ email hợp lệ",
                     maxlength: "Email không được vượt quá 100 ký tự"
                 },
-                password: {
-                    required: "Mật khẩu không được để trống",
-                    minlength: "Mật khẩu phải có ít nhất 6 ký tự",
-                    maxlength: "Mật khẩu không được vượt quá 100 ký tự"
-                },
+                password: passwordMessages,
                 status: {
                     required: "Trạng thái không được để trống"
                 }
@@ -240,8 +254,14 @@ $(function () {
             submitHandler: function (form) {
                 return false;
             },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('border-red-500');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('border-red-500');
+            },
             success: function (label, element) {
-                $(element).parents('.form-group').find('span.input-invalid').remove();
+                $(element).next('.text-red-600').remove();
             }
         });
 
@@ -252,32 +272,27 @@ $(function () {
         alert.showSwalLoading('Đang tạo người dùng...');
         
         $.ajax({
-            url: '/users/create',
+            url: '/ajax/users/create',
             type: 'POST',
             data: data,
             processData: false,
             contentType: false,
             success: function (response) {
                 alert.hideSwalLoading();
-                if (response.status === 'success') {
+                if (response.success) {
                     alert.showSwalSuccess('Thêm người dùng thành công!').then(function() {
                         window.location.href = '/users';
                     });
-                } else if (response.error) {
-                    alert.showSwalError(response.error);
                 } else {
-                    alert.showSwalError('Thêm người dùng không thành công, vui lòng thử lại!');
+                    alert.showSwalError(response.message || 'Thêm người dùng không thành công, vui lòng thử lại!');
                 }
             },
-            error: function (response) {
+            error: function (xhr, status, error) {
                 alert.hideSwalLoading();
                 let errorMessage = 'Đã xảy ra lỗi. Vui lòng kiểm tra lại dữ liệu nhập vào.';
-                if (response && response.responseJSON) {
-                    const responseData = response.responseJSON;
-                    if (responseData.errors) {
-                        alert.showSwalValidationError(responseData.errors);
-                        return;
-                    } else if (responseData.message) {
+                if (xhr && xhr.responseJSON) {
+                    const responseData = xhr.responseJSON;
+                    if (responseData.message) {
                         errorMessage = responseData.message;
                     }
                 }
@@ -290,32 +305,27 @@ $(function () {
         alert.showSwalLoading('Đang cập nhật người dùng...');
         
         $.ajax({
-            url: `/users/update/${id}`,
+            url: `/ajax/users/update/${id}`,
             type: 'POST',
             data: data,
             processData: false,
             contentType: false,
             success: function (response) {
                 alert.hideSwalLoading();
-                if (response.status === 'success') {
+                if (response.success) {
                     alert.showSwalSuccess('Cập nhật người dùng thành công!').then(function() {
                         window.location.href = `/users/view/${id}`;
                     });
-                } else if (response.error) {
-                    alert.showSwalError(response.error);
                 } else {
-                    alert.showSwalError('Cập nhật người dùng không thành công, vui lòng thử lại!');
+                    alert.showSwalError(response.message || 'Cập nhật người dùng không thành công, vui lòng thử lại!');
                 }
             },
-            error: function (response) {
+            error: function (xhr, status, error) {
                 alert.hideSwalLoading();
                 let errorMessage = 'Đã xảy ra lỗi. Vui lòng kiểm tra lại dữ liệu nhập vào.';
-                if (response && response.responseJSON) {
-                    const responseData = response.responseJSON;
-                    if (responseData.errors) {
-                        alert.showSwalValidationError(responseData.errors);
-                        return;
-                    } else if (responseData.message) {
+                if (xhr && xhr.responseJSON) {
+                    const responseData = xhr.responseJSON;
+                    if (responseData.message) {
                         errorMessage = responseData.message;
                     }
                 }
@@ -328,29 +338,24 @@ $(function () {
         alert.showSwalLoading('Đang xóa người dùng...');
         
         $.ajax({
-            url: `/users/delete/${id}`,
+            url: `/ajax/users/delete/${id}`,
             type: 'POST',
             success: function (response) {
                 alert.hideSwalLoading();
-                if (response.status === 'success') {
+                if (response.success) {
                     alert.showSwalSuccess('Xóa người dùng thành công!').then(function() {
                         window.location.href = '/users';
                     });
-                } else if (response.error) {
-                    alert.showSwalError(response.error);
                 } else {
-                    alert.showSwalError('Xóa người dùng không thành công, vui lòng thử lại!');
+                    alert.showSwalError(response.message || 'Xóa người dùng không thành công, vui lòng thử lại!');
                 }
             },
-            error: function (response) {
+            error: function (xhr, status, error) {
                 alert.hideSwalLoading();
                 let errorMessage = 'Đã xảy ra lỗi. Vui lòng kiểm tra lại dữ liệu nhập vào.';
-                if (response && response.responseJSON) {
-                    const responseData = response.responseJSON;
-                    if (responseData.errors) {
-                        alert.showSwalValidationError(responseData.errors);
-                        return;
-                    } else if (responseData.message) {
+                if (xhr && xhr.responseJSON) {
+                    const responseData = xhr.responseJSON;
+                    if (responseData.message) {
                         errorMessage = responseData.message;
                     }
                 }
@@ -363,29 +368,24 @@ $(function () {
         alert.showSwalLoading('Đang kích hoạt người dùng...');
         
         $.ajax({
-            url: `/users/activate/${id}`,
+            url: `/ajax/users/activate/${id}`,
             type: 'POST',
             success: function (response) {
                 alert.hideSwalLoading();
-                if (response.status === 'success') {
+                if (response.success) {
                     alert.showSwalSuccess('Kích hoạt người dùng thành công!').then(function() {
                         window.location.reload();
                     });
-                } else if (response.error) {
-                    alert.showSwalError(response.error);
                 } else {
-                    alert.showSwalError('Kích hoạt người dùng không thành công, vui lòng thử lại!');
+                    alert.showSwalError(response.message || 'Kích hoạt người dùng không thành công, vui lòng thử lại!');
                 }
             },
-            error: function (response) {
+            error: function (xhr, status, error) {
                 alert.hideSwalLoading();
                 let errorMessage = 'Đã xảy ra lỗi. Vui lòng kiểm tra lại dữ liệu nhập vào.';
-                if (response && response.responseJSON) {
-                    const responseData = response.responseJSON;
-                    if (responseData.errors) {
-                        alert.showSwalValidationError(responseData.errors);
-                        return;
-                    } else if (responseData.message) {
+                if (xhr && xhr.responseJSON) {
+                    const responseData = xhr.responseJSON;
+                    if (responseData.message) {
                         errorMessage = responseData.message;
                     }
                 }
@@ -398,29 +398,24 @@ $(function () {
         alert.showSwalLoading('Đang vô hiệu hóa người dùng...');
         
         $.ajax({
-            url: `/users/deactivate/${id}`,
+            url: `/ajax/users/deactivate/${id}`,
             type: 'POST',
             success: function (response) {
                 alert.hideSwalLoading();
-                if (response.status === 'success') {
+                if (response.success) {
                     alert.showSwalSuccess('Vô hiệu hóa người dùng thành công!').then(function() {
                         window.location.reload();
                     });
-                } else if (response.error) {
-                    alert.showSwalError(response.error);
                 } else {
-                    alert.showSwalError('Vô hiệu hóa người dùng không thành công, vui lòng thử lại!');
+                    alert.showSwalError(response.message || 'Vô hiệu hóa người dùng không thành công, vui lòng thử lại!');
                 }
             },
-            error: function (response) {
+            error: function (xhr, status, error) {
                 alert.hideSwalLoading();
                 let errorMessage = 'Đã xảy ra lỗi. Vui lòng kiểm tra lại dữ liệu nhập vào.';
-                if (response && response.responseJSON) {
-                    const responseData = response.responseJSON;
-                    if (responseData.errors) {
-                        alert.showSwalValidationError(responseData.errors);
-                        return;
-                    } else if (responseData.message) {
+                if (xhr && xhr.responseJSON) {
+                    const responseData = xhr.responseJSON;
+                    if (responseData.message) {
                         errorMessage = responseData.message;
                     }
                 }

@@ -1,5 +1,7 @@
-<jsp:include page="/views/layouts/partials/view-meta.jsp"/>
-
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <div class="container mx-auto px-4 py-8">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-gray-900">User Management</h1>
@@ -63,7 +65,7 @@
                                     </c:choose>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <fmt:formatDate value="${user.createdAt}" pattern="MMM dd, yyyy HH:mm"/>
+                                    <fmt:formatDate value="${user.createdAtAsDate}" pattern="MMM dd, yyyy HH:mm"/>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex space-x-2">

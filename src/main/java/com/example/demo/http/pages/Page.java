@@ -26,20 +26,22 @@ public class Page {
     protected String[] styleSheets = new String[]{}; // An array of stylesheet file names to be included in the page. E.g., "main.css", "theme.css".
     protected String[] scripts = new String[]{}; // An array of script file names to be included in the page. E.g., "app.js", "utils.js".
 
-    public void setScripts(String[] scripts) {
+    public Page setScripts(String[] scripts) {
         String[] scriptPaths = Arrays.stream(scripts)
                 .map(String::trim)
                 .map(WebAppPaths::getJsPath)
                 .toArray(String[]::new);
         this.data.put("scripts", scriptPaths);
+        return this;
     }
 
-    public void setStyleSheets(String[] styleSheets) {
+    public Page setStyleSheets(String[] styleSheets) {
         String[] styleSheetPaths = Arrays.stream(styleSheets)
                 .map(String::trim)
                 .map(WebAppPaths::getCssPath)
                 .toArray(String[]::new);
         this.data.put("styleSheets", styleSheetPaths);
+        return this;
     }
 
     public void render(HttpServletRequest request, HttpServletResponse response) {

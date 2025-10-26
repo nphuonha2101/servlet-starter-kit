@@ -1,4 +1,7 @@
-<jsp:include page="/views/layouts/partials/view-meta.jsp"/>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
 <div class="container mx-auto px-4 py-8">
     <div class="flex justify-between items-center mb-6">
@@ -35,7 +38,7 @@
         <form method="post" action="/users/update/${user.id}" class="px-6 py-4" data-validate="user" id="userForm">
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <!-- Username -->
-                <div>
+                <div class="form-field">
                     <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
                         Username <span class="text-red-500">*</span>
                     </label>
@@ -49,7 +52,7 @@
                 </div>
 
                 <!-- Email -->
-                <div>
+                <div class="form-field">
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
                         Email <span class="text-red-500">*</span>
                     </label>
@@ -63,22 +66,21 @@
                 </div>
 
                 <!-- Password -->
-                <div>
+                <div class="form-field">
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                        Password <span class="text-red-500">*</span>
+                        Password
                     </label>
                     <input type="password" 
                            id="password" 
                            name="password" 
-                           required
                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                           placeholder="Enter new password"
+                           placeholder="Enter new password (optional)"
                            value="${param.password}">
                     <p class="mt-1 text-sm text-gray-500">Leave empty to keep current password</p>
                 </div>
 
                 <!-- Status -->
-                <div>
+                <div class="form-field">
                     <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
                         Status
                     </label>
@@ -97,11 +99,11 @@
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 text-sm text-gray-600">
                     <div>
                         <span class="font-medium">Created:</span> 
-                        <fmt:formatDate value="${user.createdAt}" pattern="MMM dd, yyyy 'at' HH:mm"/>
+                        <fmt:formatDate value="${user.createdAtAsDate}" pattern="MMM dd, yyyy 'at' HH:mm"/>
                     </div>
                     <div>
                         <span class="font-medium">Last Updated:</span> 
-                        <fmt:formatDate value="${user.updatedAt}" pattern="MMM dd, yyyy 'at' HH:mm"/>
+                        <fmt:formatDate value="${user.updatedAtAsDate}" pattern="MMM dd, yyyy 'at' HH:mm"/>
                     </div>
                 </div>
             </div>

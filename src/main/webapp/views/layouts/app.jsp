@@ -1,13 +1,14 @@
-<jsp:include page="/views/layouts/partials/view-meta.jsp"/>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <title>${title}</title>
-    
-    <%-- Include meta tags and head content --%>
-    <jsp:include page="/views/layouts/partials/view-meta.jsp"/>
+
     <%-- Tailwind CSS (Built from npm) --%>
     <link rel="stylesheet" href="/static/css/main.css">
     
@@ -19,6 +20,9 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.min.js"></script>
     
+    <%-- SweetAlert2 --%>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <%-- Style sheets --%>
     <c:forEach var="styleSheet" items="${styleSheets}">
         <link rel="stylesheet" href="${styleSheet}">
@@ -27,25 +31,24 @@
     <%-- Other links or metadata --%>
 </head>
 <body>
-<header>
+<%--Header--%>
     <jsp:include page="/views/layouts/partials/header.jsp"/>
-</header>
+<%--End header--%>
+
 <main>
     <jsp:include page="${contents}"/>
-
 </main>
 
-<footer>
-    <jsp:include page="/views/layouts/partials/footer.jsp"/>
-</footer>
+<%--Footer--%>
+<jsp:include page="/views/layouts/partials/footer.jsp"/>
+<%--End footer--%>
 
 
 <%-- Scripts --%>
-<script type="module" src="/static/js/main.js"></script>
-<script src="/static/js/alert.js"></script>
-<script src="/static/js/validation-rules.js"></script>
+<script src="${pageContext.request.contextPath}/static/js/alert.js" charset="UTF-8"></script>
+<script src="${pageContext.request.contextPath}/static/js/validation-rules.js" charset="UTF-8"></script>
 <c:forEach var="script" items="${scripts}">
-    <script src="${script}"></script>
+    <script src="${script}" charset="UTF-8"></script>
 </c:forEach>
 </body>
 </html>
