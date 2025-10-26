@@ -1,6 +1,6 @@
-package com.example.demo.pages;
+package com.example.demo.http.pages;
 
-import com.example.demo.paths.WebAppPaths;
+import com.example.demo.core.paths.WebAppPaths;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -4,23 +4,20 @@ import com.example.demo.models.BaseModel;
 import com.example.demo.repository.interfaces.IBaseRepository;
 import com.example.demo.services.interfaces.IBaseService;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 
 public abstract class BaseService<T extends BaseModel, ID> implements IBaseService<T, ID> {
     
-    protected final IBaseRepository<T, ID> repository;
-    protected final Class<T> entityClass;
+    protected IBaseRepository<T, ID> repository;
     
-    @SuppressWarnings("unchecked")
+    // No-arg constructor for CDI proxy support
+    protected BaseService() {
+        // Empty constructor for CDI proxying
+    }
+    
     public BaseService(IBaseRepository<T, ID> repository) {
         this.repository = repository;
-        
-        Type genericSuperClass = getClass().getGenericSuperclass();
-        ParameterizedType parameterizedType = (ParameterizedType) genericSuperClass;
-        this.entityClass = (Class<T>) parameterizedType.getActualTypeArguments()[0];
     }
     
     @Override
@@ -85,13 +82,5 @@ public abstract class BaseService<T extends BaseModel, ID> implements IBaseServi
         } catch (Exception e) {
             throw new RuntimeException("Error counting entities", e);
         }
-    }
-    
-    
-    /**
-     * Get repository instance for advanced operations
-     */
-    protected IBaseRepository<T, ID> getRepository() {
-        return repository;
     }
 }

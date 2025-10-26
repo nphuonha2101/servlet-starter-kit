@@ -2,19 +2,25 @@ package com.example.demo.services.implementations;
 
 import com.example.demo.models.User;
 import com.example.demo.repository.implementations.UserRepository;
-import com.example.demo.services.interfaces.IBaseService;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 
 @ApplicationScoped
-public class UserService extends BaseService<User, Long> implements IBaseService<User, Long> {
-    
+public class UserService extends BaseService<User, Long> {
+
+    // No-arg constructor for CDI proxy support
+    protected UserService() {
+        super();
+    }
+
+    // Constructor with @Inject for CDI dependency injection
     @Inject
     public UserService(UserRepository userRepository) {
-        super(userRepository);
+        super();
+        this.repository = userRepository;
     }
     
     /**

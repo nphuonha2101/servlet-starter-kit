@@ -1,4 +1,4 @@
-package com.example.demo.paths;
+package com.example.demo.core.paths;
 
 /**
  * Utility class to get the paths of the web application

@@ -1,6 +1,6 @@
-package com.example.demo.controllers.web.home;
+package com.example.demo.http.controllers.web.home;
 
-import com.example.demo.pages.Page;
+import com.example.demo.http.pages.Page;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

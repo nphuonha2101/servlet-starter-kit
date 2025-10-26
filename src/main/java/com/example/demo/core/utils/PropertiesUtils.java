@@ -1,4 +1,4 @@
-package com.example.demo.utils;
+package com.example.demo.core.utils;
 
 import java.io.InputStream;
 import java.util.Properties;
@@ -29,13 +29,18 @@ public class PropertiesUtils {
      * Load properties file
      */
     private void loadPropertiesFile() {
-        System.out.println();
+        System.out.println("Loading properties file: " + APPLICATION_PROPERTIES_PATH);
         try {
             InputStream inputStream = this.getClass().getResourceAsStream(APPLICATION_PROPERTIES_PATH);
+            if (inputStream == null) {
+                throw new RuntimeException("Properties file not found: " + APPLICATION_PROPERTIES_PATH);
+            }
             properties.load(inputStream);
-
+            System.out.println("Properties file loaded successfully. Found " + properties.size() + " properties.");
         } catch (Exception e) {
-            throw new RuntimeException("Cannot load properties file: " + APPLICATION_PROPERTIES_PATH);
+            System.err.println("Error loading properties file: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Cannot load properties file: " + APPLICATION_PROPERTIES_PATH, e);
         }
     }
 

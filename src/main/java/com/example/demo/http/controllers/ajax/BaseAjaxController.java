@@ -1,13 +1,14 @@
-package com.example.demo.controllers.ajax;
+package com.example.demo.http.controllers.ajax;
 
-import com.example.demo.utils.PropertiesUtils;
+import com.example.demo.core.utils.PropertiesUtils;
+import com.example.demo.http.controllers.base.BaseController;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class BaseAjaxController extends HttpServlet {
+public abstract class BaseAjaxController extends BaseController {
 
     private Map<String, String> getAjaxHeaders() {
         String allowOrigin = PropertiesUtils.getProperty("cors.allowOrigin");

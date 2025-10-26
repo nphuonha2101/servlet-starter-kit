@@ -1,6 +1,7 @@
-package com.example.demo.controllers.ajax;
+package com.example.demo.http.controllers.ajax;
 
-import com.example.demo.utils.gson.GsonUtils;
+
+import com.example.demo.core.utils.gson.GsonUtils;
 import com.google.gson.Gson;
 import lombok.Data;
 import lombok.experimental.Accessors;

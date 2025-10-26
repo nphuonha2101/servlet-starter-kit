@@ -1,6 +1,6 @@
-package com.example.demo.utils.gson;
+package com.example.demo.core.utils.gson;
 
-import com.example.demo.utils.gson.adapters.LocalDateTimeAdapter;
+import com.example.demo.core.utils.gson.adapters.LocalDateTimeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

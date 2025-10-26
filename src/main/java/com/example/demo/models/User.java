@@ -2,6 +2,7 @@ package com.example.demo.models;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
@@ -20,17 +21,15 @@ public class User extends BaseModel {
         this.status = status;
     }
 
-    public enum Status {
+    @Getter
+    public static enum Status {
         ACTIVE("ACTIVE"),
         INACTIVE("INACTIVE");
 
-        private String value;
-        private Status(String value) {
+        private final String value;
+        Status(String value) {
             this.value = value;
         }
 
-        public String getValue() {
-            return value;
-        }
     }
 }

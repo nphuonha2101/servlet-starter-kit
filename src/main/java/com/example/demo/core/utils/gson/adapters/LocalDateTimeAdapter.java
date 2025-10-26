@@ -1,4 +1,4 @@
-package com.example.demo.utils.gson.adapters;
+package com.example.demo.core.utils.gson.adapters;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;

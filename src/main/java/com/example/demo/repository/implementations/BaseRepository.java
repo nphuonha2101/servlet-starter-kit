@@ -16,14 +16,27 @@ import java.util.Optional;
 
 public abstract class BaseRepository<T extends BaseModel, ID> implements IBaseRepository<T, ID> {
     
-    protected final Class<T> entityClass;
+    protected Class<T> entityClass;
     protected String tableName;
     
     @SuppressWarnings("unchecked")
     public BaseRepository() {
-        Type genericSuperClass = getClass().getGenericSuperclass();
-        ParameterizedType parameterizedType = (ParameterizedType) genericSuperClass;
-        this.entityClass = (Class<T>) parameterizedType.getActualTypeArguments()[0];
+        // Don't extract entityClass here to avoid ClassCastException in proxy
+    }
+    
+    // Lazy initialization of entityClass
+    @SuppressWarnings("unchecked")
+    protected void ensureEntityClassInitialized() {
+        if (this.entityClass == null) {
+            Type genericSuperClass = getClass().getGenericSuperclass();
+            if (genericSuperClass instanceof ParameterizedType) {
+                ParameterizedType parameterizedType = (ParameterizedType) genericSuperClass;
+                Type[] actualArgs = parameterizedType.getActualTypeArguments();
+                if (actualArgs.length > 0) {
+                    this.entityClass = (Class<T>) actualArgs[0];
+                }
+            }
+        }
     }
     
     /**
@@ -32,6 +45,7 @@ public abstract class BaseRepository<T extends BaseModel, ID> implements IBaseRe
      * @return table name
      */
     protected String getTableName() {
+        ensureEntityClassInitialized();
         if (tableName == null) {
             String className = entityClass.getSimpleName();
             String snakeCase = className.replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase();
@@ -144,6 +158,7 @@ public abstract class BaseRepository<T extends BaseModel, ID> implements IBaseRe
      * Insert new entity into database
      */
     private Optional<T> insert(T entity, Handle handle) {
+        ensureEntityClassInitialized();
         EntityBinder.setTimestamps(entity, false);
         
         Field[] fields = entityClass.getDeclaredFields();
@@ -163,6 +178,7 @@ public abstract class BaseRepository<T extends BaseModel, ID> implements IBaseRe
      * Update existing entity in database
      */
     private Optional<T> update(T entity, Handle handle) {
+        ensureEntityClassInitialized();
         EntityBinder.setTimestamps(entity, true);
         
         Field[] fields = entityClass.getDeclaredFields();
