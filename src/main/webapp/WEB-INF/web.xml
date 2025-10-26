@@ -8,6 +8,11 @@
     <listener>
         <listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
     </listener>
+    
+    <!-- Database Migration Listener (runs after CDI is initialized) -->
+    <listener>
+        <listener-class>com.example.demo.core.listeners.DatabaseMigrationListener</listener-class>
+    </listener>
      
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
