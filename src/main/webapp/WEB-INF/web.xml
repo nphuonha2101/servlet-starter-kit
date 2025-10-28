@@ -11,7 +11,7 @@
     
     <!-- Database Migration Listener (runs after CDI is initialized) -->
     <listener>
-        <listener-class>com.example.demo.core.listeners.DatabaseMigrationListener</listener-class>
+        <listener-class>com.nphuonha.servletkit.core.listeners.DatabaseMigrationListener</listener-class>
     </listener>
      
     <welcome-file-list>
